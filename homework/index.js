@@ -52,7 +52,7 @@
     </tr>
     <tr>
         <td>Updated:</td>
-        <td>${repo.updated_at}</td>
+        <td>${new Date(repo.updated_at).toLocaleDateString()}, ${new Date(repo.updated_at).toLocaleTimeString()}</td>
     </tr>
   </tbody>`
   table.innerHTML = tableInfo;
@@ -77,7 +77,10 @@
         return;
       }
       const ul = createAndAppend('ul', root, { class : REPOS_UL_CLASS_NAME});
-      repos.forEach(repo => renderRepoDetails(repo, ul));
+      const sortedRepos = repos.sort(function(a, b) {
+        return a.name.localeCompare(b.name);
+      });
+      sortedRepos.forEach(repo => renderRepoDetails(repo, ul));
     });
   }
 
