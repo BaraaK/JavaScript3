@@ -1,3 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
 .alert-error {
   color: red;
+  background-color: #F8D7DA;
+  height: 3rem;
+  text-align: left;
+  padding-top: 1.5rem;
+  padding-left: 1rem;
+  border-radius: 15px;
+}
+#root {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  font-family: 'Open Sans', sans-serif;
+  width: initial;
+  height: auto;
+  margin: 0rem;
+  padding: 0.5rem;
+  overflow: hidden;
+
+}
+.head {
+  background-color: #3F51B5;
+  margin: 0.5rem;
+  height: 5rem;
+  width: 100%;
+  text-align: left;
+  color: white;
+  padding-top: 2.5rem;
+  padding-left: 1rem;
+  font-size: xx-large;
+  
+ 
+}
+.repos-ul {
+  list-style: none;
+  width: 100%;
+  padding: 0.35rem;
+}
+.ul-table{
+  margin: 0rem;
+  color: #4B3E30; 
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap; 
+
+}
+.ul-table tr {
+  white-space:nowrap;
+  padding: 0.5rem;
+  font-size: inherit;
+}
+.ul-table td:first-child {
+  font-weight: bolder;
+  color: black;
+}
+.li-class{
+  margin: 0.5rem;
+  padding:1rem;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+/* Media queries*/
+@media  screen and (max-width:599px){
+  #root {
+    overflow: scroll;
+  }
+  .head {
+    font-size: large;
+    text-align: justify;
+  }
+  .repos-ul tr{
+    vertical-align: baseline;
+    white-space: normal;
+    font-size: small;
+    
+  }     
+}
+@media screen and (min-width:600px) { 
+  .repos-ul tr{
+    vertical-align: baseline;
+    white-space: normal;
+    font-size: medium;
+    
+  }
+}
+@media screen and (min-width:768px){
+  .repos-ul tr{
+    vertical-align: baseline;
+    white-space: normal;
+    font-size: medium;
+  }
 }
