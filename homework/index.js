@@ -56,26 +56,22 @@
     liItem.appendChild(createTable(repo, 'ul-table'));
   }
 
-  function renderContributorDetailes(contribtor) {
-    const main = document.getElementById('contributor-main');
-    const row = createAndAppend('div', main, { class: 'row' })
-    const columnPic = createAndAppend('div', row, { class: 'column-pic' });
-    const pic = createAndAppend('img', columnPic, { class: 'avatar-pic' })
-    pic.setAttribute('src', `${contribtor.avatar_url}`);
-    const columnContent = createAndAppend('div', row, { class: 'column-content' });
-    const content = createAndAppend('a', columnContent, { text: `${contribtor.login}`, href: `${contribtor.html_url}` });
-    content.setAttribute('target', '_blank');
-    const columnNum = createAndAppend('div', row, { text: `${contribtor.contributions}`, class: 'column-num' });
-  }
-
-  async function addContributores(repo) {
+  async function renderContributorDetailes(repo) {
     const CONTR_URL = repo.contributors_url;
     try {
       const contribtores = await fetchJSON(CONTR_URL);
       const main = document.getElementById('contributor-main');
       main.innerHTML = '';
-      contribtores.forEach(contributor => {
-        renderContributorDetailes(contributor);
+      contribtores.forEach(contribtor => {
+        const main = document.getElementById('contributor-main');
+        const row = createAndAppend('div', main, { class: 'row' })
+        const columnPic = createAndAppend('div', row, { class: 'column-pic' });
+        const pic = createAndAppend('img', columnPic, { class: 'avatar-pic' })
+        pic.setAttribute('src', `${contribtor.avatar_url}`);
+        const columnContent = createAndAppend('div', row, { class: 'column-content' });
+        const content = createAndAppend('a', columnContent, { text: `${contribtor.login}`, href: `${contribtor.html_url}` });
+        content.setAttribute('target', '_blank');
+        const columnNum = createAndAppend('div', row, { text: `${contribtor.contributions}`, class: 'column-num' });
       });
     }
     catch (error) {
@@ -84,6 +80,7 @@
     }
 
   }
+
 
   async function main(url, numberOfRepos) {
     try {
@@ -105,7 +102,7 @@
         });
       });
       renderRepoDetails(sortedRepos[0], ul);
-      addContributores(sortedRepos[0]);
+      renderContributorDetailes(sortedRepos[0]);
       selectRepo.addEventListener('change', async () => {
         try {
           const repos = await fetchJSON(`${url}?per_page=${numberOfRepos}`)
@@ -114,7 +111,7 @@
           });
           const selectedRepo = selectRepo.options[selectRepo.selectedIndex].value;
           renderRepoDetails(sortedRepos[selectedRepo], ul)
-          addContributores(sortedRepos[selectedRepo]);
+          renderContributorDetailes(sortedRepos[selectedRepo]);
         }
         catch (error) {
           console.log(error)
