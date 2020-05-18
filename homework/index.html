@@ -13,10 +13,26 @@
   <title>HYF-GITHUB</title>
   <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
   <link rel="stylesheet" href="./style.css">
+
 </head>
 
 <body>
-  <div id="root"></div>
+  <div id="root">
+    <div id="loading">Loading ....</div>
+    <header class="header">
+      <img src="hyf.png" alt="HYF logo" id="logo">
+    </header>
+    <main class="main-container">
+      <section class="repo-container"></section>
+      <section class="contributors-corepo-containerntainer">
+        <header>
+          <div class="contributors-head">Contributions</div>
+        </header>
+        <main id='contributor-main'></main>
+      </section>
+    </main>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="./index.js"></script>
 </body>
 
