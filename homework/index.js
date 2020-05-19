@@ -2,24 +2,14 @@
 
 {
   const ALERT_ERROR = 'alert-error';
+  const LOADING = document.getElementById('loading');
 
-  function fetchJSON(url, cb) {
-    const root = document.getElementById('root');
-    const loadingDiv = createAndAppend('div', root, { text: 'Loading', class: 'loading' })
-    fetch(url)
+
+  function fetchJSON(url) {
+    LOADING.style.display = 'block'
+    return fetch(url)
       .then(resopnse => {
-        if (!resopnse.ok)
-          cb(new Error(`HTTP error status : ${resopnse.status}`));
-        else
-          return resopnse.json();
-      })
-      .then(data => {
-        loadingDiv.innerText = '';
-        if (data)
-          cb(null, data);
-      })
-      .catch(error => {
-        cb(new Error('There has been a problem with your fetch operation:', error));
+        return resopnse.json();
       })
   }
 
@@ -82,33 +72,24 @@
 
   function addContributores(repo) {
     const CONTR_URL = repo.contributors_url;
-    fetchJSON(CONTR_URL, (err, contribtores) => {
-      if (err) {
-        createAndAppend('div', root, {
-          text: err.message,
-          class: ALERT_ERROR,
-        });
-        return;
-      }
+    fetchJSON(CONTR_URL).then(contribtores => {
+      LOADING.style.display = 'none'
       const main = document.getElementById('contributor-main');
       main.innerHTML = '';
       contribtores.forEach(contributor => {
         renderContributorDetailes(contributor);
       });
-
     })
+      .catch(error => {
+        const root = document.getElementById('root')
+        createAndAppend('div', root, { text: `There has been a problem with your fetch Repositories: ${error}`, class: ALERT_ERROR })
+      })
+
   }
 
   function main(url, numberOfRepos) {
-    fetchJSON(`${url}?per_page=${numberOfRepos}`, (err, repos) => {
-      const root = document.getElementById('root');
-      if (err) {
-        createAndAppend('div', root, {
-          text: err.message,
-          class: ALERT_ERROR,
-        });
-        return;
-      }
+    fetchJSON(`${url}?per_page=${numberOfRepos}`).then(repos => {
+      LOADING.style.display = 'none'
       const repoSection = document.querySelector('.repo-container');
       const header = document.querySelector('.header');
       const headDiv = createAndAppend('div', header, { class: 'head' })
@@ -124,27 +105,31 @@
           text: repo.name,
           value: index
         });
-      });
-      renderRepoDetails(sortedRepos[0], ul);
-      addContributores(sortedRepos[0]);
-      selectRepo.addEventListener('change', () => {
-        fetchJSON(`${url}?per_page=${numberOfRepos}`, (err, repos) => {
-          if (err) {
-            createAndAppend('div', root, {
-              text: err.message,
-              class: ALERT_ERROR,
+
+        renderRepoDetails(sortedRepos[0], ul);
+        addContributores(sortedRepos[0]);
+        selectRepo.addEventListener('change', () => {
+          fetchJSON(`${url}?per_page=${numberOfRepos}`).then(repos => {
+            LOADING.style.display = 'none'
+            const sortedRepos = repos.sort(function (a, b) {
+              return a.name.localeCompare(b.name);
             });
-            return;
-          }
-          const sortedRepos = repos.sort(function (a, b) {
-            return a.name.localeCompare(b.name);
-          });
-          const selectedRepo = selectRepo.options[selectRepo.selectedIndex].value;
-          renderRepoDetails(sortedRepos[selectedRepo], ul)
-          addContributores(sortedRepos[selectedRepo]);
+            const selectedRepo = selectRepo.options[selectRepo.selectedIndex].value;
+            renderRepoDetails(sortedRepos[selectedRepo], ul)
+            addContributores(sortedRepos[selectedRepo]);
+          })
+            .catch(error => {
+              const root = document.getElementById('root')
+              createAndAppend('div', root, { text: `There has been a problem with your fetch Contributions: ${error}`, class: ALERT_ERROR })
+            })
         })
       })
-    });
+
+    })
+      .catch(error => {
+        const root = document.getElementById('root')
+        createAndAppend('div', root, { text: `There has been a problem with your fetch Repositories: ${error}`, class: ALERT_ERROR })
+      })
 
   }
 
